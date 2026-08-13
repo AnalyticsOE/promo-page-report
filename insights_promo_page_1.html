@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promo Page – Open English Brazil Adult | Performance Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --accent: #00c2ff;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --orange: #f97316;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3147;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.6;min-height:100vh}
+  .container{max-width:1200px;margin:0 auto;padding:24px 16px}
+  .header{text-align:center;margin-bottom:36px;padding:32px 24px;background:linear-gradient(135deg,#1a1d27 0%,#0f1117 100%);border-radius:16px;border:1px solid var(--border)}
+  .header h1{font-size:clamp(20px,4vw,32px);font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .header p{color:var(--muted);margin-top:8px;font-size:14px}
+  .header .badge{display:inline-block;background:rgba(0,194,255,0.12);color:var(--accent);border:1px solid rgba(0,194,255,0.3);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;margin-top:10px}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden}
+  .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-color,var(--accent))}
+  .kpi-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .kpi-value{font-size:clamp(22px,4vw,32px);font-weight:800;margin:8px 0 4px;color:var(--accent-color,var(--text))}
+  .kpi-sub{font-size:12px;color:var(--muted)}
+  .kpi-icon{position:absolute;right:16px;top:16px;font-size:28px;opacity:.3}
+  .section{margin-bottom:28px}
+  .section-title{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .section-title::before{content:'';display:block;width:4px;height:18px;background:var(--accent);border-radius:2px}
+  .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+  @media(max-width:768px){.chart-grid{grid-template-columns:1fr}}
+  .chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+  .chart-card h3{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em}
+  .chart-full{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:28px}
+  .chart-full h3{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{background:#11141f;color:var(--muted);text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;border-bottom:2px solid var(--border)}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+  tbody tr:hover{background:rgba(255,255,255,.03)}
+  tbody td{padding:10px 12px}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .lr-chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:700}
+  .lr-high{background:rgba(34,197,94,.15);color:#22c55e}
+  .lr-mid{background:rgba(234,179,8,.15);color:#eab308}
+  .lr-low{background:rgba(239,68,68,.15);color:#ef4444}
+  .top-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:28px}
+  .top-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+  .top-card h3{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:14px}
+  .top-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .top-item:last-child{border-bottom:none;padding-bottom:0}
+  .top-item-date{color:var(--text);font-weight:600}
+  .top-item-val{color:var(--accent);font-weight:700}
+  .insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:28px}
+  .insight-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+  .insight-box .icon{font-size:24px;margin-bottom:10px}
+  .insight-box h4{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .insight-box p{font-size:12px;color:var(--muted);line-height:1.7}
+  .insight-box .highlight{color:var(--accent);font-weight:700}
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 0;border-top:1px solid var(--border);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Promo Page &middot; Open English Brazil Adult</h1>
+    <p>Page: <strong>/promocao-open-english/</strong> &nbsp;&middot;&nbsp; GA4 Property 321847880</p>
+    <div class="badge">Jan 1, 2026 &rarr; Aug 12, 2026 &middot; 224 days</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi" style="--accent-color:#00c2ff"><div class="kpi-icon">📊</div>
+      <div class="kpi-label">Total Sessions</div>
+      <div class="kpi-value">4,482,176</div>
+      <div class="kpi-sub">Daily avg: 20,010</div></div>
+    <div class="kpi" style="--accent-color:#22c55e"><div class="kpi-icon">🎯</div>
+      <div class="kpi-label">Total Leads</div>
+      <div class="kpi-value">159,090</div>
+      <div class="kpi-sub">Daily avg: 710</div></div>
+    <div class="kpi" style="--accent-color:#7c3aed"><div class="kpi-icon">📈</div>
+      <div class="kpi-label">Overall Lead Rate</div>
+      <div class="kpi-value">3.55%</div>
+      <div class="kpi-sub">Leads / Sessions</div></div>
+    <div class="kpi" style="--accent-color:#f97316"><div class="kpi-icon">📅</div>
+      <div class="kpi-label">Days of Data</div>
+      <div class="kpi-value">224</div>
+      <div class="kpi-sub">Jan 2026 &rarr; Aug 12, 2026</div></div>
+    <div class="kpi" style="--accent-color:#eab308"><div class="kpi-icon">🏆</div>
+      <div class="kpi-label">Best Day (Sessions)</div>
+      <div class="kpi-value">71,050</div>
+      <div class="kpi-sub">02 Jan 2026</div></div>
+    <div class="kpi" style="--accent-color:#22c55e"><div class="kpi-icon">💡</div>
+      <div class="kpi-label">Best Day (Leads)</div>
+      <div class="kpi-value">2,947</div>
+      <div class="kpi-sub">03 Mar 2026</div></div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card"><h3>Sessions by Month</h3><canvas id="cSess" height="220"></canvas></div>
+    <div class="chart-card"><h3>Monthly Lead Rate (%)</h3><canvas id="cLR" height="220"></canvas></div>
+  </div>
+  <div class="chart-full"><h3>Leads by Month</h3><canvas id="cLeads" height="180"></canvas></div>
+  <div class="chart-full"><h3>Daily Sessions — 2026 Trend</h3><canvas id="cDaily" height="200"></canvas></div>
+
+  <div class="section"><div class="section-title">Monthly Summary</div>
+  <div class="chart-card table-wrap"><table>
+  <thead><tr><th>Month</th><th class="num">Sessions</th><th class="num">Leads</th><th class="num">Lead Rate</th><th class="num">Days</th><th class="num">Sessions/Day</th><th class="num">Leads/Day</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Jan 2026</strong></td><td class="num">1,029,306</td><td class="num">41,702</td><td class="num"><span class="lr-chip lr-mid">4.05%</span></td><td class="num">31</td><td class="num">33,203</td><td class="num">1345</td></tr>
+    <tr><td><strong>Feb 2026</strong></td><td class="num">807,561</td><td class="num">29,066</td><td class="num"><span class="lr-chip lr-mid">3.60%</span></td><td class="num">28</td><td class="num">28,841</td><td class="num">1038</td></tr>
+    <tr><td><strong>Mar 2026</strong></td><td class="num">731,761</td><td class="num">25,398</td><td class="num"><span class="lr-chip lr-mid">3.47%</span></td><td class="num">31</td><td class="num">23,605</td><td class="num">819</td></tr>
+    <tr><td><strong>Apr 2026</strong></td><td class="num">282,227</td><td class="num">22,317</td><td class="num"><span class="lr-chip lr-high">7.91%</span></td><td class="num">30</td><td class="num">9,408</td><td class="num">744</td></tr>
+    <tr><td><strong>May 2026</strong></td><td class="num">534,013</td><td class="num">18,746</td><td class="num"><span class="lr-chip lr-mid">3.51%</span></td><td class="num">31</td><td class="num">17,226</td><td class="num">605</td></tr>
+    <tr><td><strong>Jun 2026</strong></td><td class="num">616,231</td><td class="num">10,718</td><td class="num"><span class="lr-chip lr-low">1.74%</span></td><td class="num">30</td><td class="num">20,541</td><td class="num">357</td></tr>
+    <tr><td><strong>Jul 2026</strong></td><td class="num">399,327</td><td class="num">9,444</td><td class="num"><span class="lr-chip lr-low">2.36%</span></td><td class="num">31</td><td class="num">12,882</td><td class="num">305</td></tr>
+    <tr><td><strong>Aug 2026 (1–12)</strong></td><td class="num">81,750</td><td class="num">1,699</td><td class="num"><span class="lr-chip lr-low">2.08%</span></td><td class="num">12</td><td class="num">6,812</td><td class="num">142</td></tr>
+  </tbody></table></div></div>
+
+  <div class="section"><div class="section-title">Top Performing Days</div>
+  <div class="top-grid">
+    <div class="top-card"><h3>🔥 Top Sessions</h3>
+      <div class="top-item"><span class="top-item-date">02 Jan 2026</span><span class="top-item-val">71,050</span></div>
+      <div class="top-item"><span class="top-item-date">18 May 2026</span><span class="top-item-val">69,650</span></div>
+      <div class="top-item"><span class="top-item-date">21 Jan 2026</span><span class="top-item-val">65,857</span></div>
+      <div class="top-item"><span class="top-item-date">23 Jan 2026</span><span class="top-item-val">60,359</span></div>
+      <div class="top-item"><span class="top-item-date">01 Jan 2026</span><span class="top-item-val">60,176</span></div>
+    </div>
+    <div class="top-card"><h3>🎯 Top Leads</h3>
+      <div class="top-item"><span class="top-item-date">03 Mar 2026</span><span class="top-item-val">2,947 leads</span></div>
+      <div class="top-item"><span class="top-item-date">02 Feb 2026</span><span class="top-item-val">2,613 leads</span></div>
+      <div class="top-item"><span class="top-item-date">05 Jan 2026</span><span class="top-item-val">2,340 leads</span></div>
+      <div class="top-item"><span class="top-item-date">27 Jan 2026</span><span class="top-item-val">2,246 leads</span></div>
+      <div class="top-item"><span class="top-item-date">03 Feb 2026</span><span class="top-item-val">2,228 leads</span></div>
+    </div>
+    <div class="top-card"><h3>📈 Top Lead Rate (min 5K sessions)</h3>
+      <div class="top-item"><span class="top-item-date">23 Apr 2026</span><span class="top-item-val">16.91%</span></div>
+      <div class="top-item"><span class="top-item-date">28 Apr 2026</span><span class="top-item-val">12.80%</span></div>
+      <div class="top-item"><span class="top-item-date">24 Apr 2026</span><span class="top-item-val">12.52%</span></div>
+      <div class="top-item"><span class="top-item-date">27 Apr 2026</span><span class="top-item-val">12.37%</span></div>
+      <div class="top-item"><span class="top-item-date">02 Feb 2026</span><span class="top-item-val">11.15%</span></div>
+    </div>
+  </div></div>
+
+  <div class="section"><div class="section-title">Key Insights</div>
+  <div class="insight-grid">
+    <div class="insight-box"><div class="icon">📉</div><h4>Session Drop Q2–Q3</h4><p>Q1 (Jan–Mar) averaged <span class="highlight">28,540 sessions/day</span> vs Q3 (Jul–Aug 12) with <span class="highlight">11,188/day</span>. Ad spend appears to have decreased significantly heading into summer.</p></div>
+    <div class="insight-box"><div class="icon">🚀</div><h4>Traffic Peak: May 18–22</h4><p>The week of May 18–22 saw the highest traffic of the period: <span class="highlight">69,650 sessions on May 18</span>. This likely coincides with a major paid media campaign.</p></div>
+    <div class="insight-box"><div class="icon">💎</div><h4>April: Exceptional Lead Rate</h4><p>April averaged a lead rate of <span class="highlight">7.91%</span>, with individual days exceeding <span class="highlight">16%</span> (Apr 23). Highly qualified traffic with strong purchase intent.</p></div>
+    <div class="insight-box"><div class="icon">📅</div><h4>Clear Weekly Pattern</h4><p>Weekends show lower volume but higher conversion: <span class="highlight">4.41% LR vs 3.45%</span> on weekdays. Weekday traffic is largely paid; weekend visits tend to be more organic and intentional.</p></div>
+    <div class="insight-box"><div class="icon">📊</div><h4>June: High Volume, Low LR</h4><p>June had <span class="highlight">616,231 sessions</span> (second-highest month) but only <span class="highlight">1.74% LR</span>. Traffic was massive but lower-intent — audience segmentation may need review.</p></div>
+    <div class="insight-box"><div class="icon">⚠️</div><h4>August Slowdown</h4><p>The first 12 days of August show just <span class="highlight">6,812 sessions/day</span> on average — the lowest of the period. Week 2 of August (4–12) dropped sharply; LR holds at <span class="highlight">2.08%</span>.</p></div>
+  </div></div>
+
+  <div class="section"><div class="section-title">Weekday vs. Weekend</div>
+  <div class="kpi-grid">
+    <div class="kpi" style="--accent-color:#00c2ff">
+      <div class="kpi-label">Weekdays — Sessions/Day</div>
+      <div class="kpi-value">25,208</div>
+      <div class="kpi-sub">LR: 3.45% &nbsp;&middot;&nbsp; 160 days</div>
+    </div>
+    <div class="kpi" style="--accent-color:#7c3aed">
+      <div class="kpi-label">Weekends — Sessions/Day</div>
+      <div class="kpi-value">7,015</div>
+      <div class="kpi-sub">LR: 4.41% &nbsp;&middot;&nbsp; 64 days</div>
+    </div>
+  </div></div>
+
+  <div class="footer">
+    Source: Google Analytics 4 &middot; Property 321847880 (Website Brazil – GA4) &middot; /promocao-open-english/<br>
+    Filters: pagePath BEGINS_WITH &quot;/promocao-open-english/&quot; &middot; lead_submission WHERE landingPage BEGINS_WITH &quot;/promocao-open-english&quot;<br>
+    Generated August 13, 2026 &middot; Open English Social Media Team
+  </div>
+</div>
+
+<script>
+const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug (1-12)"];
+const sessData = [1029306, 807561, 731761, 282227, 534013, 616231, 399327, 81750];
+const leadsData = [41702, 29066, 25398, 22317, 18746, 10718, 9444, 1699];
+const lrData = [4.05, 3.6, 3.47, 7.91, 3.51, 1.74, 2.36, 2.08];
+const dailyDates = ["20260101", "20260102", "20260103", "20260104", "20260105", "20260106", "20260107", "20260108", "20260109", "20260110", "20260111", "20260112", "20260113", "20260114", "20260115", "20260116", "20260117", "20260118", "20260119", "20260120", "20260121", "20260122", "20260123", "20260124", "20260125", "20260126", "20260127", "20260128", "20260129", "20260130", "20260131", "20260201", "20260202", "20260203", "20260204", "20260205", "20260206", "20260207", "20260208", "20260209", "20260210", "20260211", "20260212", "20260213", "20260214", "20260215", "20260216", "20260217", "20260218", "20260219", "20260220", "20260221", "20260222", "20260223", "20260224", "20260225", "20260226", "20260227", "20260228", "20260301", "20260302", "20260303", "20260304", "20260305", "20260306", "20260307", "20260308", "20260309", "20260310", "20260311", "20260312", "20260313", "20260314", "20260315", "20260316", "20260317", "20260318", "20260319", "20260320", "20260321", "20260322", "20260323", "20260324", "20260325", "20260326", "20260327", "20260328", "20260329", "20260330", "20260331", "20260401", "20260402", "20260403", "20260404", "20260405", "20260406", "20260407", "20260408", "20260409", "20260410", "20260411", "20260412", "20260413", "20260414", "20260415", "20260416", "20260417", "20260418", "20260419", "20260420", "20260421", "20260422", "20260423", "20260424", "20260425", "20260426", "20260427", "20260428", "20260429", "20260430", "20260501", "20260502", "20260503", "20260504", "20260505", "20260506", "20260507", "20260508", "20260509", "20260510", "20260511", "20260512", "20260513", "20260514", "20260515", "20260516", "20260517", "20260518", "20260519", "20260520", "20260521", "20260522", "20260523", "20260524", "20260525", "20260526", "20260527", "20260528", "20260529", "20260530", "20260531", "20260601", "20260602", "20260603", "20260604", "20260605", "20260606", "20260607", "20260608", "20260609", "20260610", "20260611", "20260612", "20260613", "20260614", "20260615", "20260616", "20260617", "20260618", "20260619", "20260620", "20260621", "20260622", "20260623", "20260624", "20260625", "20260626", "20260627", "20260628", "20260629", "20260630", "20260701", "20260702", "20260703", "20260704", "20260705", "20260706", "20260707", "20260708", "20260709", "20260710", "20260711", "20260712", "20260713", "20260714", "20260715", "20260716", "20260717", "20260718", "20260719", "20260720", "20260721", "20260722", "20260723", "20260724", "20260725", "20260726", "20260727", "20260728", "20260729", "20260730", "20260731", "20260801", "20260802", "20260803", "20260804", "20260805", "20260806", "20260807", "20260808", "20260809", "20260810", "20260811", "20260812"];
+const dailySess = [60176, 71050, 22034, 9569, 34354, 30453, 30234, 33901, 28421, 19164, 13751, 39029, 44573, 29849, 37334, 59295, 13098, 8731, 44520, 30606, 65857, 51645, 60359, 18298, 17444, 41263, 24165, 20760, 20845, 22936, 25592, 8569, 23440, 20652, 31929, 37890, 40226, 23920, 12438, 57583, 56573, 45942, 38519, 31776, 19760, 2058, 24891, 31652, 37842, 37797, 39704, 27672, 2768, 42706, 27693, 20818, 23893, 20468, 18382, 3470, 38293, 42620, 17430, 35427, 31649, 12771, 1274, 51529, 36841, 38833, 26547, 32047, 16924, 1238, 28280, 20635, 21340, 27492, 26466, 20914, 1176, 29822, 28813, 26422, 23493, 22605, 2680, 1148, 42931, 20651, 18836, 12717, 12699, 6584, 1095, 15268, 20835, 11965, 9814, 8379, 4010, 695, 14524, 10273, 9342, 6112, 6372, 729, 595, 5672, 9944, 9770, 9650, 10176, 7643, 3576, 14740, 10693, 14130, 15389, 6092, 5053, 842, 25879, 16801, 18652, 10687, 11111, 7039, 526, 23967, 12306, 12979, 15022, 21302, 10933, 968, 69650, 54613, 36455, 22931, 12670, 8466, 936, 44517, 21960, 25602, 10921, 14882, 9595, 656, 15600, 16652, 27340, 19547, 12244, 9928, 676, 30131, 14786, 14614, 17950, 24796, 526, 657, 59119, 32293, 23972, 37539, 17253, 13975, 573, 41311, 24171, 31560, 31645, 18172, 14680, 688, 27350, 36483, 21161, 20093, 9349, 563, 441, 22860, 27045, 12240, 16586, 17729, 6419, 691, 19262, 18587, 21052, 29691, 11398, 602, 434, 21246, 19322, 20532, 17279, 14456, 638, 504, 8610, 14457, 11056, 7487, 7537, 611, 551, 27939, 8791, 11132, 10179, 17973, 572, 449, 1445, 1094, 1014];
+const dailyLeads = [794, 1894, 940, 776, 2340, 2127, 1915, 1776, 1675, 898, 707, 1740, 1974, 1298, 1210, 1136, 534, 424, 1343, 1276, 1094, 1108, 1035, 534, 400, 1407, 2246, 1937, 1858, 1733, 1573, 827, 2613, 2228, 1166, 1133, 999, 703, 386, 1617, 1305, 1073, 1071, 891, 775, 250, 854, 825, 1103, 1140, 996, 719, 313, 1212, 1137, 1093, 1026, 858, 753, 364, 1470, 2947, 1422, 1614, 1141, 491, 170, 1463, 1256, 1503, 773, 764, 516, 179, 615, 650, 741, 664, 530, 382, 145, 808, 824, 741, 584, 535, 214, 195, 959, 738, 711, 568, 516, 398, 103, 957, 997, 941, 802, 677, 330, 63, 943, 806, 684, 597, 490, 183, 51, 556, 516, 596, 1632, 1274, 750, 310, 1824, 1369, 1400, 1273, 448, 360, 48, 1038, 1465, 986, 702, 494, 362, 22, 924, 632, 579, 608, 418, 288, 53, 1153, 1056, 1097, 742, 644, 280, 60, 1176, 986, 634, 554, 552, 341, 44, 422, 477, 221, 197, 430, 255, 48, 770, 542, 521, 244, 154, 60, 50, 879, 601, 503, 519, 287, 257, 44, 622, 390, 388, 434, 333, 188, 59, 326, 497, 573, 493, 328, 79, 38, 489, 1013, 448, 371, 400, 141, 34, 415, 467, 396, 315, 166, 56, 24, 307, 208, 340, 392, 302, 59, 43, 359, 367, 339, 280, 202, 43, 34, 312, 238, 218, 247, 170, 36, 29, 163, 128, 81];
+const dailyLR = [1.32, 2.67, 4.27, 8.11, 6.81, 6.98, 6.33, 5.24, 5.89, 4.69, 5.14, 4.46, 4.43, 4.35, 3.24, 1.92, 4.08, 4.86, 3.02, 4.17, 1.66, 2.15, 1.71, 2.92, 2.29, 3.41, 9.29, 9.33, 8.91, 7.56, 6.15, 9.65, 11.15, 10.79, 3.65, 2.99, 2.48, 2.94, 3.1, 2.81, 2.31, 2.34, 2.78, 2.8, 3.92, 12.15, 3.43, 2.61, 2.91, 3.02, 2.51, 2.6, 11.31, 2.84, 4.11, 5.25, 4.29, 4.19, 4.1, 10.49, 3.84, 6.91, 8.16, 4.56, 3.61, 3.84, 13.34, 2.84, 3.41, 3.87, 2.91, 2.38, 3.05, 14.46, 2.17, 3.15, 3.47, 2.42, 2.0, 1.83, 12.33, 2.71, 2.86, 2.8, 2.49, 2.37, 7.99, 16.99, 2.23, 3.57, 3.77, 4.47, 4.06, 6.04, 9.41, 6.27, 4.79, 7.86, 8.17, 8.08, 8.23, 9.06, 6.49, 7.85, 7.32, 9.77, 7.69, 25.1, 8.57, 9.8, 5.19, 6.1, 16.91, 12.52, 9.81, 8.67, 12.37, 12.8, 9.91, 8.27, 7.35, 7.12, 5.7, 4.01, 8.72, 5.29, 6.57, 4.45, 5.14, 4.18, 3.86, 5.14, 4.46, 4.05, 1.96, 2.63, 5.48, 1.66, 1.93, 3.01, 3.24, 5.08, 3.31, 6.41, 2.64, 4.49, 2.48, 5.07, 3.71, 3.55, 6.71, 2.71, 2.86, 0.81, 1.01, 3.51, 2.57, 7.1, 2.56, 3.67, 3.57, 1.36, 0.62, 11.41, 7.61, 1.49, 1.86, 2.1, 1.38, 1.66, 1.84, 7.68, 1.51, 1.61, 1.23, 1.37, 1.83, 1.28, 8.58, 1.19, 1.36, 2.71, 2.45, 3.51, 14.03, 8.62, 2.14, 3.75, 3.66, 2.24, 2.26, 2.2, 4.92, 2.15, 2.51, 1.88, 1.06, 1.46, 9.3, 5.53, 1.44, 1.08, 1.66, 2.27, 2.09, 9.25, 8.53, 4.17, 2.54, 3.07, 3.74, 2.68, 7.04, 6.17, 1.12, 2.71, 1.96, 2.43, 0.95, 6.29, 6.46, 11.28, 11.7, 7.99];
+
+const cd = {
+  responsive: true,
+  plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
+  scales: {
+    x: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { color: '#1e2236' } },
+    y: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { color: '#1e2236' } }
+  }
+};
+new Chart(document.getElementById('cSess'), {
+  type: 'bar', data: { labels, datasets: [{ label: 'Sessions', data: sessData,
+    backgroundColor: 'rgba(0,194,255,0.7)', borderRadius: 6, borderSkipped: false }] },
+  options: { ...cd, plugins: { ...cd.plugins, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw.toLocaleString('en-US') } } } }
+});
+new Chart(document.getElementById('cLR'), {
+  type: 'line', data: { labels, datasets: [{ label: 'Lead Rate %', data: lrData,
+    borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.15)',
+    fill: true, tension: 0.4, pointBackgroundColor: '#7c3aed', pointRadius: 5 }] },
+  options: { ...cd, scales: { ...cd.scales, y: { ...cd.scales.y, ticks: { ...cd.scales.y.ticks, callback: v => v + '%' } } } }
+});
+new Chart(document.getElementById('cLeads'), {
+  type: 'bar', data: { labels, datasets: [{ label: 'Leads', data: leadsData,
+    backgroundColor: 'rgba(34,197,94,0.7)', borderRadius: 6, borderSkipped: false }] },
+  options: { ...cd, plugins: { ...cd.plugins, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw.toLocaleString('en-US') } } } }
+});
+const dailyLabels = dailyDates.map(d => d.slice(4,6)+'/'+d.slice(6,8));
+new Chart(document.getElementById('cDaily'), {
+  type: 'line', data: { labels: dailyLabels, datasets: [{ label: 'Daily Sessions', data: dailySess,
+    borderColor: '#00c2ff', backgroundColor: 'rgba(0,194,255,0.05)',
+    fill: true, tension: 0.2, pointRadius: 0, borderWidth: 1.5 }] },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
+    scales: {
+      x: { ticks: { color: '#64748b', maxRotation: 0, autoSkip: true, maxTicksLimit: 12, font: { size: 10 } }, grid: { color: '#1e2236' } },
+      y: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { color: '#1e2236' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
